@@ -40,6 +40,9 @@ public class UI extends JFrame {
 	private JPanel paintPanel;
 	private JToggleButton tglPen;
 	private JToggleButton tglBucket;
+	private JButton tglSave;
+	private JButton tglLoad;
+	private String msgNeedSend;
 
 	private static UI instance;
 	private int selectedColor = -543230; // golden
@@ -49,8 +52,7 @@ public class UI extends JFrame {
 	PaintMode paintMode = PaintMode.Pixel;
 
 	// self- contributed***********************************************
-	Scanner scn = new Scanner(System.in);
-	String input = "";
+	
 	//*****************************************************************
 
 	/**
@@ -205,6 +207,12 @@ public class UI extends JFrame {
 
 		tglBucket = new JToggleButton("Bucket");
 		toolPanel.add(tglBucket);
+		
+		tglSave = new JButton("Save"); //button added
+		toolPanel.add(tglSave);
+		
+		tglLoad = new JButton("Load");  //button added
+		toolPanel.add(tglLoad);
 
 		// change the paint mode to PIXEL mode
 		tglPen.addActionListener(new ActionListener() {
@@ -225,6 +233,21 @@ public class UI extends JFrame {
 				paintMode = PaintMode.Area;
 			}
 		});
+		
+		tglSave.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				tglLoad.setSelected(false);
+			}
+		});
+		
+		tglLoad.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				tglSave.setSelected(false);
+			}
+		});
+
 
 		JPanel msgPanel = new JPanel();
 
@@ -249,7 +272,10 @@ public class UI extends JFrame {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				if (e.getKeyCode() == 10) { // if the user press ENTER
-					onTextInputted(msgField.getText());
+					msgNeedSend = username +": "+ msgField.getText();
+					onTextInputted(msgNeedSend);
+					//send to all other chatroom need to be fixed
+					
 					msgField.setText("");
 				}
 			}
