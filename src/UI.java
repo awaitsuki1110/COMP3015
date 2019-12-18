@@ -15,6 +15,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
@@ -52,8 +54,8 @@ public class UI extends JFrame {
 	PaintMode paintMode = PaintMode.Pixel;
 
 	// self- contributed***********************************************
-	
-	//*****************************************************************
+
+	// *****************************************************************
 
 	/**
 	 * get the instance of UI. Singleton design pattern.
@@ -72,13 +74,14 @@ public class UI extends JFrame {
 	 * instead.
 	 */
 	/*
-	// self- contributed***********************************************
-
-	//*****************************************************************
-*/
+	 * // self- contributed***********************************************
+	 * 
+	 * //*****************************************************************
+	 */
 	private UI() {
 		setTitle("KidPaint");
-		username = InputNameWindow.name; //set the input and set the name = username so that this class have local username
+		username = InputNameWindow.name; // set the input and set the name = username so that this class have local
+											// username
 		System.out.println(username);
 
 		JPanel basePanel = new JPanel();
@@ -207,11 +210,11 @@ public class UI extends JFrame {
 
 		tglBucket = new JToggleButton("Bucket");
 		toolPanel.add(tglBucket);
-		
-		tglSave = new JButton("Save"); //button added
+
+		tglSave = new JButton("Save"); // button added
 		toolPanel.add(tglSave);
-		
-		tglLoad = new JButton("Load");  //button added
+
+		tglLoad = new JButton("Load"); // button added
 		toolPanel.add(tglLoad);
 
 		// change the paint mode to PIXEL mode
@@ -233,21 +236,81 @@ public class UI extends JFrame {
 				paintMode = PaintMode.Area;
 			}
 		});
-		
+
 		tglSave.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				tglLoad.setSelected(false);
+				File file = new File("kidPaintData");
+				Scanner scn = new Scanner(System.in);
+				try {
+					FileOutputStream out = new FileOutputStream(file);
+					String str = "";
+					byte[] buffer = str.getBytes();
+
+//				StringBuilder builder = new StringBuilder();
+
+					for (int i = 0; i < data.length; i++)// for each row
+					{
+						for (int j = 0; j < data.length; j++)// for each column
+						{
+							str = "" + data[i][j];
+							buffer = str.getBytes();
+							out.write(buffer);// append to the output string
+							if (j < data.length - 1)
+								str = ",";
+							buffer = str.getBytes();
+							out.write(buffer);
+							System.out.println(data[i][j]);
+
+						}
+						out.write('\n');// append new line at the end of the row
+					}
+					out.close();
+					scn.close();
+					System.out.println("Save file successful");
+				} catch (Exception e) {
+					System.out.println("Save file failure");
+				}
 			}
 		});
-		
+
 		tglLoad.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				tglSave.setSelected(false);
+
+				paintPanel = new JPanel() {
+
+					// refresh the paint panel
+					@Override
+					public void paint(Graphics g) {
+						super.paint(g);
+
+						Graphics2D g2 = (Graphics2D) g; // Graphics2D provides the setRenderingHints method
+
+						// enable anti-aliasing
+						RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING,
+								RenderingHints.VALUE_ANTIALIAS_ON);
+						g2.setRenderingHints(rh);
+
+						// clear the paint panel using black
+						g2.setColor(Color.black);
+						g2.fillRect(0, 0, this.getWidth(), this.getHeight());
+
+						// draw and fill circles with the specific colors stored in the data array
+						for (int x = 0; x < data.length; x++) {
+							for (int y = 0; y < data[0].length; y++) {
+								g2.setColor(new Color(data[x][y]));
+								g2.fillArc(blockSize * x, blockSize * y, blockSize, blockSize, 0, 360);
+								g2.setColor(Color.darkGray);
+								g2.drawArc(blockSize * x, blockSize * y, blockSize, blockSize, 0, 360);
+							}
+						}
+					}
+				};
 			}
 		});
-
 
 		JPanel msgPanel = new JPanel();
 
@@ -272,10 +335,10 @@ public class UI extends JFrame {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				if (e.getKeyCode() == 10) { // if the user press ENTER
-					msgNeedSend = username +": "+ msgField.getText();
+					msgNeedSend = username + ": " + msgField.getText();
 					onTextInputted(msgNeedSend);
-					//send to all other chatroom need to be fixed
-					
+					// send to all other chatroom need to be fixed
+
 					msgField.setText("");
 				}
 			}
