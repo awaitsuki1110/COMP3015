@@ -16,6 +16,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.LinkedList;
 import java.util.List;
@@ -261,7 +262,6 @@ public class UI extends JFrame {
 								str = ",";
 							buffer = str.getBytes();
 							out.write(buffer);
-							System.out.println(data[i][j]);
 
 						}
 						out.write('\n');// append new line at the end of the row
@@ -279,36 +279,41 @@ public class UI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				tglSave.setSelected(false);
-
-				paintPanel = new JPanel() {
-
-					// refresh the paint panel
-					@Override
-					public void paint(Graphics g) {
-						super.paint(g);
-
-						Graphics2D g2 = (Graphics2D) g; // Graphics2D provides the setRenderingHints method
-
-						// enable anti-aliasing
-						RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING,
-								RenderingHints.VALUE_ANTIALIAS_ON);
-						g2.setRenderingHints(rh);
-
-						// clear the paint panel using black
-						g2.setColor(Color.black);
-						g2.fillRect(0, 0, this.getWidth(), this.getHeight());
-
-						// draw and fill circles with the specific colors stored in the data array
-						for (int x = 0; x < data.length; x++) {
-							for (int y = 0; y < data[0].length; y++) {
-								g2.setColor(new Color(data[x][y]));
-								g2.fillArc(blockSize * x, blockSize * y, blockSize, blockSize, 0, 360);
-								g2.setColor(Color.darkGray);
-								g2.drawArc(blockSize * x, blockSize * y, blockSize, blockSize, 0, 360);
-							}
+				try {
+					byte[] buffer = new byte[10024];
+					String filename = "kidPaintData";
+					Scanner scn = new Scanner(System.in);
+					File file = new File(filename);
+					FileInputStream in = new FileInputStream(file);
+					String fileInput = "";
+					long size = file.length();
+					while (size > 0) {
+						int len = in.read(buffer);
+						size -= len;
+						fileInput = new String(buffer, 0, len);
+						System.out.println(fileInput.toString());
+					}
+					String[] js = fileInput.split(",|\\n");
+					for (int i = 0; i < js.length; i++) {
+					}
+					for (int i = 0; i < data.length; i++)// for each row
+					{
+						for (int j = 0; j < data.length; j++)// for each column
+						{
+//							if (js[j].equals("\n"))
+//								break;
+							data[i][j] = Integer.parseInt(js[j]);
+							System.out.print(data[i][j]);
 						}
 					}
-				};
+					in.close();
+					scn.close();
+					System.out.println("Load Successful");
+				} catch (Exception e) {
+					e.printStackTrace();
+					System.out.println("Load failure");
+				}
+//				paintPanel = new JPanel();
 			}
 		});
 
