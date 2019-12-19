@@ -294,26 +294,26 @@ public class UI extends JFrame {
 						System.out.println(fileInput.toString());
 					}
 					String[] js = fileInput.split(",|\\n");
-					for (int i = 0; i < js.length; i++) {
-					}
+					int col = 0; //col of the read in data
+					
 					for (int i = 0; i < data.length; i++)// for each row
 					{
 						for (int j = 0; j < data.length; j++)// for each column
 						{
-//							if (js[j].equals("\n"))
-//								break;
-							data[i][j] = Integer.parseInt(js[j]);
-							System.out.print(data[i][j]);
+							System.out.println();
+							data[i][j] = Integer.parseInt(js[j+50*col]);  //col handling
 						}
+						col++;
 					}
 					in.close();
 					scn.close();
+					paintPanel.repaint();
 					System.out.println("Load Successful");
 				} catch (Exception e) {
 					e.printStackTrace();
 					System.out.println("Load failure");
 				}
-//				paintPanel = new JPanel();
+				// here should send the data to server and the sketchpads of all connected clients must be updated then  [notice]
 			}
 		});
 
