@@ -10,9 +10,12 @@ import java.net.UnknownHostException;
 import java.util.Random;
 
 public class KidPaint {
+	public static KidPaint instance;
+	
 	DatagramSocket socket;
 	Random viaPort=new Random();
 	public KidPaint() throws IOException  {
+		instance = this;
 		// UDP connect
 		try {
 			DatagramSocket socket = new DatagramSocket(viaPort.nextInt(8998) + 1001);
@@ -47,7 +50,10 @@ public class KidPaint {
 				while (true) {
 					int len = in.readInt();
 					in.read(buffer, 0, len);
-					System.out.println(new String(buffer, 0, len));
+					String content = new String(buffer,0,len);
+					//explain content
+					
+					System.out.println(content);
 				}
 			} catch (Exception e2) {
 				System.out.println("Connection Dropped");
@@ -55,13 +61,17 @@ public class KidPaint {
 			}
 		}).start();
 		while (true) {
-			//String userAndInput = UI.msgNeedSend;
-			//out.writeInt(userAndInput.length());
-			//out.write(userAndInput.getBytes(), 0, userAndInput.length());
+			
+			String userAndInput = "ASVD";
+			out.writeInt(userAndInput.length());
+			out.write(userAndInput.getBytes(), 0, userAndInput.length());
 		}
 	
 	}
 	
+	public void send(String msg) {
+		
+			}
 
 	
 

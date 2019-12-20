@@ -55,6 +55,7 @@ public class kidServer {
 		System.out.printf("Listening UDP at port %d...\n", port);
 		socket = new DatagramSocket(port);
 		DatagramPacket packet = new DatagramPacket(new byte[1024], 1024);
+		
 		socket.receive(packet);
 		byte[] data = packet.getData();
 		String str = new String(data, 0, packet.getLength());
@@ -70,6 +71,7 @@ public class kidServer {
 		byte[] buffer = replyMsg.getBytes();
 		DatagramPacket packet2 = new DatagramPacket(buffer, buffer.length, packet.getAddress(), srcPort);
 		socket.send(packet);
+		
 	}
 
 	private void serve(Socket clientSocket) throws IOException {
@@ -81,12 +83,14 @@ public class kidServer {
 		while (true) {
 			int len = in.readInt();
 			in.read(buffer, 0, len);
+			System.out.println("S>>:"+new String(buffer,0,len));
 			forward(buffer, len, clientSocket.getInetAddress());
 		}
 	}
 
 	private void forward(byte[] data, int len, InetAddress inetClientAddress) {
 		synchronized (list) {
+			System.out.println(inetClientAddress);
 
 			for (int i = 0; i < list.size(); i++) {
 

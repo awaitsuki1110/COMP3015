@@ -340,10 +340,12 @@ public class UI extends JFrame {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				if (e.getKeyCode() == 10) { // if the user press ENTER
-					msgNeedSend = username + ": " + msgField.getText();
-					onTextInputted(msgNeedSend);
+					msgNeedSend=(username + ": " + msgField.getText());
+					
+					onTextInputted(getMsgNeedSend());
+					
 					// send to all other chatroom need to be fixed
-
+					
 					msgField.setText("");
 				}
 			}
@@ -382,6 +384,8 @@ public class UI extends JFrame {
 	 * @param text - user inputted text
 	 */
 	private void onTextInputted(String text) {
+		
+		
 		chatArea.setText(chatArea.getText() + text + "\n");
 	}
 
@@ -452,5 +456,13 @@ public class UI extends JFrame {
 		this.blockSize = blockSize;
 		paintPanel.setPreferredSize(new Dimension(data.length * blockSize, data[0].length * blockSize));
 		paintPanel.repaint();
+	}
+
+	public String getMsgNeedSend() {
+		return msgNeedSend;
+	}
+
+	public void setMsgNeedSend(String msgNeedSend) {
+		this.msgNeedSend = msgNeedSend;
 	}
 }
