@@ -17,6 +17,7 @@ public class KidPaint {
 	public KidPaint() throws IOException  {
 		instance = this;
 		// UDP connect
+		String srcAddr = "";
 		try {
 			DatagramSocket socket = new DatagramSocket(viaPort.nextInt(8998) + 1001);
 			byte[] msg = "Hello World".getBytes();
@@ -29,7 +30,7 @@ public class KidPaint {
 			byte[] data = packet.getData();
 			String str = new String(data, 0, packet.getLength());
 			int size = packet.getLength();
-			String srcAddr = packet.getAddress().toString();
+			srcAddr = packet.getAddress().toString();
 			int srcPort = packet.getPort();
 			System.out.println("Received data:\t" + str);
 			System.out.println("data size:\t" + size);
@@ -40,8 +41,9 @@ public class KidPaint {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		System.out.println(srcAddr);
 		// TCP Connect
-		Socket cSocket = new Socket("127.0.0.1", 22556);
+		Socket cSocket = new Socket(InetAddress.getByName(srcAddr.substring(1)), 22556);
 		DataInputStream in = new DataInputStream(cSocket.getInputStream());
 		DataOutputStream out = new DataOutputStream(cSocket.getOutputStream());
 		new Thread(() -> {
