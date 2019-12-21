@@ -15,7 +15,7 @@ public class kidServer {
 	DatagramSocket socket;
 
 	public kidServer(int udpport, int tcpport) throws IOException {
-		
+
 		// UDP connection
 		System.out.printf("Listening UDP at port %d...\n", udpport);
 		socket = new DatagramSocket(udpport);
@@ -57,7 +57,7 @@ public class kidServer {
 	}
 
 	public void udpServer() throws IOException {
-		
+
 		DatagramPacket packet = new DatagramPacket(new byte[1024], 1024);
 
 		socket.receive(packet);
@@ -89,15 +89,17 @@ public class kidServer {
 			in.read(buffer, 0, len);
 			String getContent = new String(buffer, 0, len);
 			System.out.println("S>>:" + new String(buffer, 0, len));
-			if (getContent.toCharArray()[0] == 'a') {
-				forward(buffer, len, clientSocket.getInetAddress());
-			}
-			if (getContent.toCharArray()[0] == 'b') {
-				forward(buffer, len, clientSocket.getInetAddress());
-			}
-			if (getContent.toCharArray()[0] == 'c') {
-				forward(buffer, len, clientSocket.getInetAddress());
-			}
+
+			forward(buffer, len, clientSocket.getInetAddress());
+//			if (getContent.toCharArray()[0] == 'a') {
+//				forward(buffer, len, clientSocket.getInetAddress());
+//			}
+//			if (getContent.toCharArray()[0] == 'b') {
+//				forward(buffer, len, clientSocket.getInetAddress());
+//			}
+//			if (getContent.toCharArray()[0] == 'c') {
+//				forward(buffer, len, clientSocket.getInetAddress());
+//			}
 
 		}
 	}
@@ -110,13 +112,11 @@ public class kidServer {
 
 				try {
 					Socket socket = list.get(i);
-					if (socket.getInetAddress().equals(inetClientAddress)) {
-
-					} else {
-						DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-						out.writeInt(len);
-						out.write(data, 0, len);
-					}
+					
+					DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+					out.writeInt(len);
+					out.write(data, 0, len);
+					
 				} catch (IOException e) {
 					// the connection is dropped but the socket is not yet removed.
 				}
@@ -124,6 +124,7 @@ public class kidServer {
 			}
 
 		}
+
 	}
 
 	public static void main(String[] args) throws IOException {
