@@ -90,16 +90,16 @@ public class kidServer {
 			String getContent = new String(buffer, 0, len);
 			System.out.println("S>>:" + new String(buffer, 0, len));
 
-			forward(buffer, len, clientSocket.getInetAddress());
-//			if (getContent.toCharArray()[0] == 'a') {
-//				forward(buffer, len, clientSocket.getInetAddress());
-//			}
-//			if (getContent.toCharArray()[0] == 'b') {
-//				forward(buffer, len, clientSocket.getInetAddress());
-//			}
-//			if (getContent.toCharArray()[0] == 'c') {
-//				forward(buffer, len, clientSocket.getInetAddress());
-//			}
+			//forward(buffer, len, clientSocket.getInetAddress());
+			if (getContent.toCharArray()[0] == 'a') {
+				forward(buffer, len, clientSocket.getInetAddress());
+			}
+			if (getContent.toCharArray()[0] == 'b') {
+				forward(buffer, len, clientSocket.getInetAddress());
+			}
+			if (getContent.toCharArray()[0] == 'c') {
+				forward(buffer, len, clientSocket.getInetAddress());
+			}
 
 		}
 	}
