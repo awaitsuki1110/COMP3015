@@ -17,14 +17,16 @@ public class kidServer {
 	public kidServer(int udpport, int tcpport) throws IOException {
 		// UDP connection
 		new Thread(() -> {
-			try {
-				udpServer(udpport);
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+			while (true) {
+				try {
+					udpServer(udpport);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		}).start();
-		
+
 		// TCP connection
 		srvSocket = new ServerSocket(tcpport);
 
@@ -55,7 +57,7 @@ public class kidServer {
 		System.out.printf("Listening UDP at port %d...\n", port);
 		socket = new DatagramSocket(port);
 		DatagramPacket packet = new DatagramPacket(new byte[1024], 1024);
-		
+
 		socket.receive(packet);
 		byte[] data = packet.getData();
 		String str = new String(data, 0, packet.getLength());
@@ -71,7 +73,7 @@ public class kidServer {
 		byte[] buffer = replyMsg.getBytes();
 		DatagramPacket packet2 = new DatagramPacket(buffer, buffer.length, packet.getAddress(), srcPort);
 		socket.send(packet);
-		
+
 	}
 
 	private void serve(Socket clientSocket) throws IOException {
@@ -83,18 +85,18 @@ public class kidServer {
 		while (true) {
 			int len = in.readInt();
 			in.read(buffer, 0, len);
-			String getContent=new String(buffer,0,len);
-			System.out.println("S>>:"+new String(buffer,0,len));
-			if(getContent.toCharArray()[0]=='a') {
+			String getContent = new String(buffer, 0, len);
+			System.out.println("S>>:" + new String(buffer, 0, len));
+			if (getContent.toCharArray()[0] == 'a') {
 				forward(buffer, len, clientSocket.getInetAddress());
 			}
-			if(getContent.toCharArray()[0]=='b') {
+			if (getContent.toCharArray()[0] == 'b') {
 				forward(buffer, len, clientSocket.getInetAddress());
 			}
-			if(getContent.toCharArray()[0]=='c') {
+			if (getContent.toCharArray()[0] == 'c') {
 				forward(buffer, len, clientSocket.getInetAddress());
 			}
-			
+
 		}
 	}
 
@@ -123,7 +125,7 @@ public class kidServer {
 	}
 
 	public static void main(String[] args) throws IOException {
-		new kidServer(12345,22556);
+		new kidServer(12345, 22556);
 	}
 
 }

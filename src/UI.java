@@ -99,6 +99,7 @@ public class UI extends JFrame {
 		basePanel.setLayout(new BorderLayout(0, 0));
 		String srcAddr = "";
 		//UDP connect
+		
 		try {
 			DatagramSocket socket = new DatagramSocket(viaPort.nextInt(8998) + 1001);
 			byte[] msg = "Hello World".getBytes();
@@ -122,6 +123,7 @@ public class UI extends JFrame {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		//TCP Connect
 		Socket cSocket = new Socket(InetAddress.getByName(srcAddr.substring(1)), 22556);
 		DataInputStream in = new DataInputStream(cSocket.getInputStream());
