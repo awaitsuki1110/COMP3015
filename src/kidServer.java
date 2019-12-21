@@ -15,11 +15,14 @@ public class kidServer {
 	DatagramSocket socket;
 
 	public kidServer(int udpport, int tcpport) throws IOException {
+		
 		// UDP connection
+		System.out.printf("Listening UDP at port %d...\n", udpport);
+		socket = new DatagramSocket(udpport);
 		new Thread(() -> {
 			while (true) {
 				try {
-					udpServer(udpport);
+					udpServer();
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -53,9 +56,8 @@ public class kidServer {
 		}
 	}
 
-	public void udpServer(int port) throws IOException {
-		System.out.printf("Listening UDP at port %d...\n", port);
-		socket = new DatagramSocket(port);
+	public void udpServer() throws IOException {
+		
 		DatagramPacket packet = new DatagramPacket(new byte[1024], 1024);
 
 		socket.receive(packet);
