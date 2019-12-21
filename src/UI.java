@@ -15,11 +15,20 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowEvent;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
@@ -45,8 +54,8 @@ public class UI extends JFrame {
 	private JToggleButton tglBucket;
 	private JButton tglSave;
 	private JButton tglLoad;
-	private String msgNeedSend;
-
+	private String msgNeedSend = "";
+	private Random viaPort=new Random();
 	private static UI instance;
 	private int selectedColor = -543230; // golden
 	private String username = "";
@@ -62,8 +71,10 @@ public class UI extends JFrame {
 	 * get the instance of UI. Singleton design pattern.
 	 * 
 	 * @return
+	 * @throws IOException 
+	 * @throws UnknownHostException 
 	 */
-	public static UI getInstance() {
+	public static UI getInstance() throws UnknownHostException, IOException {
 		if (instance == null)
 			instance = new UI();
 
@@ -73,22 +84,65 @@ public class UI extends JFrame {
 	/**
 	 * private constructor. To create an instance of UI, call UI.getInstance()
 	 * instead.
+	 * @throws IOException 
+	 * @throws UnknownHostException 
 	 */
-	/*
-	 * // self- contributed***********************************************
-	 * 
-	 * //*****************************************************************
-	 */
-	private UI() {
+	
+	private UI() throws UnknownHostException, IOException {
 		setTitle("KidPaint");
-		username = InputNameWindow.name; // set the input and set the name = username so that this class have local
+		this.username = InputNameWindow.name; // set the input and set the name = username so that this class have local
 											// username
 		System.out.println(username);
 
 		JPanel basePanel = new JPanel();
 		getContentPane().add(basePanel, BorderLayout.CENTER);
 		basePanel.setLayout(new BorderLayout(0, 0));
+		String srcAddr = "";
+		//UDP connect
+		try {
+			DatagramSocket socket = new DatagramSocket(viaPort.nextInt(8998) + 1001);
+			byte[] msg = "Hello World".getBytes();
+			InetAddress dest = InetAddress.getByName("255.255.255.255");
+			int port = 12345;
+			DatagramPacket packet = new DatagramPacket(msg, msg.length, dest, port);
+			socket.send(packet);
+			// reply from server
+			socket.receive(packet);
+			byte[] data = packet.getData();
+			String str = new String(data, 0, packet.getLength());
+			int size = packet.getLength();
+			srcAddr = packet.getAddress().toString();
+			int srcPort = packet.getPort();
+			System.out.println("Received data:\t" + str);
+			System.out.println("data size:\t" + size);
+			System.out.println("sent by:\t" + srcAddr);
+			System.out.println("via port:\t" + srcPort);
 
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//TCP Connect
+		Socket cSocket = new Socket(InetAddress.getByName(srcAddr.substring(1)), 22556);
+		DataInputStream in = new DataInputStream(cSocket.getInputStream());
+		DataOutputStream out = new DataOutputStream(cSocket.getOutputStream());
+		new Thread(() -> {
+			byte[] buffer = new byte[1024];
+			try {
+				while (true) {
+					int len = in.readInt();
+					in.read(buffer, 0, len);
+					String content = new String(buffer,0,len);
+					//explain content
+					
+					//System.out.println(content);
+				}
+			} catch (Exception e2) {
+				System.out.println("Connection Dropped");
+				System.exit(-1);
+			}
+		}).start();
+		
 		paintPanel = new JPanel() {
 
 			// refresh the paint panel
@@ -340,13 +394,22 @@ public class UI extends JFrame {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				if (e.getKeyCode() == 10) { // if the user press ENTER
-					msgNeedSend=(username + ": " + msgField.getText());
+					System.out.println("Message: "+ msgNeedSend);
+					msgNeedSend=("a"+username + ": " + msgField.getText());
+					System.out.println("Message merged: "+ msgNeedSend);
+					try {
+						out.writeInt(msgNeedSend.length());
+						out.write(msgNeedSend.getBytes(), 0, msgNeedSend.length());
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 					
 					onTextInputted(getMsgNeedSend());
 					
 					// send to all other chatroom need to be fixed
-					
-					msgField.setText("");
+//					System.out.println(msgNeedSend);
+//					msgField.setText("");
 				}
 			}
 
@@ -400,6 +463,9 @@ public class UI extends JFrame {
 
 		data[col][row] = selectedColor;
 		paintPanel.repaint(col * blockSize, row * blockSize, blockSize, blockSize);
+		String drawPixel = "" + col + "," +  row + "," + data[col][row];
+		
+		//here to the data coordinate([col], [row], and the int of data[col][row] to server)
 	}
 
 	/**
@@ -459,10 +525,10 @@ public class UI extends JFrame {
 	}
 
 	public String getMsgNeedSend() {
-		return msgNeedSend;
+		return this.msgNeedSend;
 	}
 
 	public void setMsgNeedSend(String msgNeedSend) {
-		this.msgNeedSend = msgNeedSend;
+		this.msgNeedSend = username+": "+msgNeedSend;
 	}
 }

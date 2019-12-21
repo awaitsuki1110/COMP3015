@@ -10,6 +10,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.awt.Dialog.ModalExclusionType;
 import java.awt.Window.Type;
 import java.awt.event.MouseEvent;
@@ -76,7 +77,13 @@ public class ColorPicker extends JDialog {
 				try {
 					selectedColor = colorImage.getRGB(e.getX(), e.getY());
 					UI.getInstance().selectColor(selectedColor);
-				} catch (IndexOutOfBoundsException ex) { }
+				} catch (IndexOutOfBoundsException ex) { } catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		

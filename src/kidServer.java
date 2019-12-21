@@ -83,8 +83,18 @@ public class kidServer {
 		while (true) {
 			int len = in.readInt();
 			in.read(buffer, 0, len);
+			String getContent=new String(buffer,0,len);
 			System.out.println("S>>:"+new String(buffer,0,len));
-			forward(buffer, len, clientSocket.getInetAddress());
+			if(getContent.toCharArray()[0]=='a') {
+				forward(buffer, len, clientSocket.getInetAddress());
+			}
+			if(getContent.toCharArray()[0]=='b') {
+				forward(buffer, len, clientSocket.getInetAddress());
+			}
+			if(getContent.toCharArray()[0]=='c') {
+				forward(buffer, len, clientSocket.getInetAddress());
+			}
+			
 		}
 	}
 
