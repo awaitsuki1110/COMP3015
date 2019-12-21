@@ -129,15 +129,24 @@ public class UI extends JFrame {
 		DataInputStream in = new DataInputStream(cSocket.getInputStream());
 		DataOutputStream out = new DataOutputStream(cSocket.getOutputStream());
 		new Thread(() -> {
+			System.out.println("01");
 			byte[] buffer = new byte[1024];
 			try {
 				while (true) {
+					System.out.println("02");
 					int len = in.readInt();
+					System.out.println("03");
+					
 					in.read(buffer, 0, len);
+					System.out.println("04");
 					String content = new String(buffer,0,len);
+
+					System.out.println("05");
+					System.out.println(buffer);
+					onTextInputted(content);
 					//explain content
 					
-					//System.out.println(content);
+					//
 				}
 			} catch (Exception e2) {
 				System.out.println("Connection Dropped");
@@ -407,7 +416,7 @@ public class UI extends JFrame {
 						e1.printStackTrace();
 					}
 					
-					onTextInputted(getMsgNeedSend());
+					
 					
 					// send to all other chatroom need to be fixed
 //					System.out.println(msgNeedSend);
@@ -450,8 +459,16 @@ public class UI extends JFrame {
 	 */
 	private void onTextInputted(String text) {
 		
-		
+		if(text.toCharArray()[0]=='a') {
 		chatArea.setText(chatArea.getText() + text + "\n");
+		}
+		if(text.toCharArray()[0]=='b') {
+			
+		}
+		if(text.toCharArray()[0]=='c') {
+			
+		}
+		
 	}
 
 	/**
