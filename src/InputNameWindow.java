@@ -8,6 +8,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.Scanner;
 
 import javax.swing.JButton;
@@ -65,7 +67,12 @@ public class InputNameWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				name = "" + txt.getText();  //set input to name
 				System.out.println("the name: " + name);  //test 
-				closeOpen();
+				try {
+					closeOpen();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 
 			}
 
@@ -80,7 +87,7 @@ public class InputNameWindow extends JFrame {
 //		return this.name;
 //	}
 	
-	private void closeOpen() {
+	private void closeOpen() throws UnknownHostException, IOException {
 		// TODO Auto-generated method stub
 		UI ui = UI.getInstance(); // get the instance of UI
 		ui.setData(new int[50][50], 20); // set the data array and block size. comment this statement to use the default
