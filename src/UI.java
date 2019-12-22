@@ -209,7 +209,7 @@ public class UI extends JFrame {
 					String str="";
 					for (int i = 0; i < data.length; i++)// for each row
 					{
-						for (int j = 0; j < data.length; j++)// for each column
+						for (int j = 0; j < data[i].length; j++)// for each column
 						{
 							str = "" + data[i][j];
 							
