@@ -130,7 +130,7 @@ public class UI extends JFrame {
 		DataOutputStream out = new DataOutputStream(cSocket.getOutputStream());
 		new Thread(() -> {
 			System.out.println("01");
-			byte[] buffer = new byte[1024];
+			byte[] buffer = new byte[10024];
 			try {
 				while (true) {
 					System.out.println("02");
@@ -204,9 +204,34 @@ public class UI extends JFrame {
 			// handle the mouse-up event of the paint panel
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				if (paintMode == PaintMode.Area && e.getX() >= 0 && e.getY() >= 0)
+				if (paintMode == PaintMode.Area && e.getX() >= 0 && e.getY() >= 0) {
 					paintArea(e.getX() / blockSize, e.getY() / blockSize);
+					String str="";
+					for (int i = 0; i < data.length; i++)// for each row
+					{
+						for (int j = 0; j < data.length; j++)// for each column
+						{
+							str = "" + data[i][j];
+							
+							if (j < data.length - 1)
+								str = ",";
+							
+
+						}
+						
+					}
+					String toOutput=("b"+str);
+					try {
+						out.writeInt(toOutput.length());
+						out.write(toOutput.getBytes(), 0, toOutput.length());
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				
 			}
+			
 		});
 
 		paintPanel.addMouseMotionListener(new MouseMotionListener() {
@@ -300,7 +325,9 @@ public class UI extends JFrame {
 				tglPen.setSelected(false);
 				tglBucket.setSelected(true);
 				paintMode = PaintMode.Area;
+				
 			}
+			
 		});
 
 		tglSave.addActionListener(new ActionListener() {

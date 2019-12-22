@@ -79,7 +79,7 @@ public class kidServer {
 	}
 
 	private void serve(Socket clientSocket) throws IOException {
-		byte[] buffer = new byte[1024];
+		byte[] buffer = new byte[10024];
 		System.out.printf("Established a connection to host %s:%d\n\n", clientSocket.getInetAddress(),
 				clientSocket.getPort());
 
