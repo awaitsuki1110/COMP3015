@@ -209,12 +209,12 @@ public class UI extends JFrame {
 					String str="";
 					for (int i = 0; i < data.length; i++)// for each row
 					{
-						for (int j = 0; j < data[i].length; j++)// for each column
+						for (int j = 0; j < data.length; j++)// for each column
 						{
-							str = "" + data[i][j];
+							str = str+ data[i][j];
 							
 							if (j < data.length - 1)
-								str = ",";
+								str = str+",";
 							
 
 						}
@@ -228,6 +228,7 @@ public class UI extends JFrame {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
+					
 				}
 				
 			}
