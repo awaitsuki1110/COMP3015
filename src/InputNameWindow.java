@@ -32,7 +32,7 @@ public class InputNameWindow extends JFrame {
 		Container container = this.getContentPane();
 		container.setLayout(new FlowLayout());
 		
-		JTextArea textArea = new JTextArea(5, 30);
+		JTextArea textArea = new JTextArea(5, 20);
 		JScrollPane scrollPane = new JScrollPane(textArea); 
 		textArea.setEditable(false);
 		textArea.append("Please input your name");

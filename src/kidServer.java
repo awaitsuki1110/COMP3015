@@ -59,7 +59,7 @@ public class kidServer {
 
 	public void udpServer() throws IOException {
 
-		DatagramPacket packet = new DatagramPacket(new byte[10024], 1024);
+		DatagramPacket packet = new DatagramPacket(new byte[10024], 10024);
 
 		socket.receive(packet);
 		byte[] data = packet.getData();
