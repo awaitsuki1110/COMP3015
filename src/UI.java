@@ -242,6 +242,7 @@ public class UI extends JFrame {
 			public void mouseDragged(MouseEvent e) {
 				if (paintMode == PaintMode.Pixel && e.getX() >= 0 && e.getY() >= 0)
 					paintPixel(e.getX() / blockSize, e.getY() / blockSize);
+				
 			}
 
 			@Override
@@ -549,7 +550,7 @@ public class UI extends JFrame {
 
 		data[col][row] = selectedColor;
 		paintPanel.repaint(col * blockSize, row * blockSize, blockSize, blockSize);
-		String drawPixel = "" + col + "," +  row + "," + data[col][row];
+		String drawPixel = col + "," +  row + "," + data[col][row];
 		
 		//here to the data coordinate([col], [row], and the int of data[col][row] to server)
 	}
