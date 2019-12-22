@@ -130,7 +130,7 @@ public class UI extends JFrame {
 		DataOutputStream out = new DataOutputStream(cSocket.getOutputStream());
 		new Thread(() -> {
 			System.out.println("01");
-			byte[] buffer = new byte[10024];
+			byte[] buffer = new byte[100024];
 			try {
 				while (true) {
 					System.out.println("02");
@@ -218,9 +218,9 @@ public class UI extends JFrame {
 							
 
 						}
-						
+						str=str+"\n";
 					}
-					String toOutput=("b"+str);
+					String toOutput=("c"+str);
 					try {
 						out.writeInt(toOutput.length());
 						out.write(toOutput.getBytes(), 0, toOutput.length());
@@ -228,6 +228,7 @@ public class UI extends JFrame {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
+					str="";
 					
 				}
 				
@@ -374,7 +375,7 @@ public class UI extends JFrame {
 				tglSave.setSelected(false);
 				String fileInput = "";
 				try {
-					byte[] buffer = new byte[10024];
+					byte[] buffer = new byte[100024];
 					String filename = "kidPaintData";
 					Scanner scn = new Scanner(System.in);
 					File file = new File(filename);
@@ -409,6 +410,7 @@ public class UI extends JFrame {
 				}
 				String toOutput=("b"+fileInput);
 				try {
+					System.out.println(toOutput);
 					out.writeInt(toOutput.length());
 					out.write(toOutput.getBytes(), 0, toOutput.length());
 				} catch (IOException e1) {
@@ -518,7 +520,20 @@ public class UI extends JFrame {
 			paintPanel.repaint();
 		}
 		if(text.toCharArray()[0]=='c') {
+			String noHeader=text.substring(1);
+			String[] js = noHeader.split(",|\\n");
+			int col = 0; //col of the read in data
 			
+			for (int i = 0; i < data.length; i++)// for each row
+			{
+				for (int j = 0; j < data.length; j++)// for each column
+				{
+					System.out.println();
+					data[i][j] = Integer.parseInt(js[j+50*col]);  //col handling
+				}
+				col++;
+			}
+			paintPanel.repaint();
 		}
 		
 	}

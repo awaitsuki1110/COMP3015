@@ -46,6 +46,7 @@ public class kidServer {
 				try {
 					serve(cSocket);
 				} catch (IOException e) {
+					e.printStackTrace();
 					System.err.println("connection dropped.");
 				}
 				synchronized (list) {
@@ -79,7 +80,7 @@ public class kidServer {
 	}
 
 	private void serve(Socket clientSocket) throws IOException {
-		byte[] buffer = new byte[10024];
+		byte[] buffer = new byte[100024];
 		System.out.printf("Established a connection to host %s:%d\n\n", clientSocket.getInetAddress(),
 				clientSocket.getPort());
 
@@ -96,6 +97,7 @@ public class kidServer {
 			}
 			if (getContent.toCharArray()[0] == 'b') {
 				forward(buffer, len, clientSocket.getInetAddress());
+				System.out.println(buffer);
 			}
 			if (getContent.toCharArray()[0] == 'c') {
 				forward(buffer, len, clientSocket.getInetAddress());
