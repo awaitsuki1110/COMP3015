@@ -344,13 +344,14 @@ public class UI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				tglSave.setSelected(false);
+				String fileInput = "";
 				try {
 					byte[] buffer = new byte[10024];
 					String filename = "kidPaintData";
 					Scanner scn = new Scanner(System.in);
 					File file = new File(filename);
 					FileInputStream in = new FileInputStream(file);
-					String fileInput = "";
+					
 					long size = file.length();
 					while (size > 0) {
 						int len = in.read(buffer);
@@ -378,6 +379,15 @@ public class UI extends JFrame {
 					e.printStackTrace();
 					System.out.println("Load failure");
 				}
+				String toOutput=("b"+fileInput);
+				try {
+					out.writeInt(toOutput.length());
+					out.write(toOutput.getBytes(), 0, toOutput.length());
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 				// here should send the data to server and the sketchpads of all connected clients must be updated then  [notice]
 			}
 		});
@@ -464,7 +474,20 @@ public class UI extends JFrame {
 			chatArea.setText(chatArea.getText() + noHeader + "\n");
 		}
 		if(text.toCharArray()[0]=='b') {
+			String noHeader=text.substring(1);
+			String[] js = noHeader.split(",|\\n");
+			int col = 0; //col of the read in data
 			
+			for (int i = 0; i < data.length; i++)// for each row
+			{
+				for (int j = 0; j < data.length; j++)// for each column
+				{
+					System.out.println();
+					data[i][j] = Integer.parseInt(js[j+50*col]);  //col handling
+				}
+				col++;
+			}
+			paintPanel.repaint();
 		}
 		if(text.toCharArray()[0]=='c') {
 			
