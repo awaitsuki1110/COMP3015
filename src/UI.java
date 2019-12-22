@@ -460,7 +460,8 @@ public class UI extends JFrame {
 	private void onTextInputted(String text) {
 		
 		if(text.toCharArray()[0]=='a') {
-		chatArea.setText(chatArea.getText() + text + "\n");
+			String noHeader=text.substring(1);
+			chatArea.setText(chatArea.getText() + noHeader + "\n");
 		}
 		if(text.toCharArray()[0]=='b') {
 			
